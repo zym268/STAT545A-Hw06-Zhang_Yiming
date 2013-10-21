@@ -1,0 +1,233 @@
+STAT 545A Homework#6
+========================================================
+  Yiming Zhang
+```{r include = FALSE}
+opts_chunk$set(tidy = FALSE)
+```
+
+First, loading the Gapminder data and needed packages.
+```{r}
+gdURL <- "http://www.stat.ubc.ca/~jenny/notOcto/STAT545A/examples/gapminder/data/gapminderDataFiveYear.txt"
+gDat <- read.delim(file=gdURL)
+library(lattice)
+library(plyr)
+library(xtable)
+library(ggplot2)
+library(xtable)
+```
+
+```{r}
+## define a function for converting and printing to HTML table
+htmlPrint <- function(x, ...,
+                      digits = 4, include.rownames = FALSE) {
+  print(xtable(x, digits = digits, ...), type = 'html',
+        include.rownames = include.rownames, ...)
+  }
+
+```
+Then have a quick check of the data.
+```{r}
+str(gDat)
+```
+We can see that the data we have loaded is a data.frame, and there are 1704 observations and 6 variables. Notice that there are only 5 levels in variable "continent", just try to check how many countries that each continent have.
+```{r results = 'asis'}
+countcountry <- ddply(gDat,~continent,summarize,count_country=length(unique(country)))
+htmlPrint(countcountry)
+```
+Then we notice that there are only 2 countries are included in Oceania, this could bring bad effects to our following analysis, so just drop the Oceania.
+```{r}
+gDat <- droplevels(subset(gDat,continent !="Oceania"))
+```
+Have a quick check
+```{r}
+str(gDat)
+```
+We can see that the Oceania has been successfully dropped from the original data.
+Let's check out the general picture of life expectancy in these four continents without considering the year.
+```{r}
+stripplot(lifeExp ~ continent, gDat, jitter.data = TRUE, grid = "h", type = c("p", 
+    "a"), main = paste("Life expectancy in different continents"), fun = median)
+```
+>Here notice that I use median point to connect the four continents, since median is a more robust measure than mean.
+
+In this picture, we can have the general idea that the life expectancy in Europe are higher than the other continents. 
+Then let's check out how the life expectancy varies by time.
+```{r}
+stripplot(lifeExp ~ factor(year) | reorder(continent, lifeExp), gDat,
+          jitter.data = TRUE,
+          type = c("p", "a"), fun = median, alpha = 0.4, grid = "h", 
+          ## use alpha to control the transparency 
+          main = paste("Life expectancy varies in time in four continents"),
+          scales = list(x = list(rot = c(45, 0))))
+```
+To have a clear view of the trend for the four continents, plot another picture that 
+```{r}
+LifeExpchgebyCont_tall <- ddply(gDat, ~year + continent, 
+                                summarize, MedianLifeExp = median(lifeExp))
+xyplot(MedianLifeExp ~ year, LifeExpchgebyCont_tall, groups = continent, 
+       main = paste("Life expectancy by median in four continents"),
+       auto.key = TRUE, type = c("p", "a"))
+```
+From the plot we can see that the life expectancy in all the four continents are increasing, but they have different patterns. For Europe, it starts at high level but increase slowly ; for Americas, it starts little lower than Europe but it increase to the same level with Europe in recent years; for Africa, it starts at lowest level and also increase slowly; for Asia, it is the most interesting part, it start at very low level, near the Africa, but it increase very fast and finally get the same level as Americas and Europe. Also we can notice that the plots in Europe are concentrated while the plots in Asia are sparse. 
+
+```{r}
+GDPbyYear_tall <- ddply(gDat, ~year + continent, summarize, Max = max(gdpPercap), 
+    Min = min(gdpPercap))
+print(xyplot(Max ~ year, GDPbyYear_tall, groups = continent, auto.key = TRUE, 
+    type = c("p", "a")), position = c(0, 0, 0.55, 1), more = TRUE)
+print(xyplot(Min ~ year, GDPbyYear_tall, groups = continent, auto.key = TRUE, 
+    type = c("p", "a")), position = c(0.45, 0, 1, 1))
+```
+
+To have a more clear view of the distribution of the four continents on gdp per captial and life expectancy for one year (let's choose 2007), plot the density plot.
+```{r}
+select_year <- "2007"
+gDat_select_year <- subset(gDat,subset=year==select_year)
+ggplot(gDat_select_year,aes(x=gdpPercap,colour=continent))+geom_density()
+ggplot(gDat_select_year,aes(x=lifeExp,colour=continent))+geom_density()
+```
+To compare different countries simulatanously with GDP per captia and lifeExp and also with population, draw a plot that with gdpPercap as x asis, lifeExp as y asis and square root of population as size of each plot.
+> here I use square root of the population rather than the orginal population to reduce the huge gap difference between each country to make the plot size easy to compare. 
+```{r}
+ggplot(subset(gDat, year == select_year), aes(x = gdpPercap, y = lifeExp, colour = continent, 
+    size = sqrt(pop))) + geom_point() + scale_x_log10()
+ggplot(gDat, aes(x = lifeExp, color = continent)) + geom_density()
+```
+
+reorder and arrange the gapminder data
+```{r}
+##first reorder the continent factor based on their mean of life expectancy
+gDat <- within(gDat, continent <- reorder(continent, lifeExp,mean))
+##then reorder the country factor in each continent based on their mean of life expectancy
+gDat <- within(gDat, country <- reorder(country, lifeExp,mean))
+##arrange and reorder the data itself by continent, then country and finally year
+gDat <- arrange(gDat, continent, country, year)
+```
+Then print the cleaned data to file.
+```{r}
+write.table(gDat, "gDat_cl.tsv", quote = FALSE,
+            sep = "\t", row.names = FALSE)
+```
+There I finished the main task in Rscript01, then I will do the analysis in Rscript02 without importing the data again. 
+
+Here I use a function to get the intercept, slope and standard deviation of linear regression of life expectancy on year within each country.
+```{r}
+jFun <- function(x) {
+  jFit <- lm(lifeExp ~ I(year - min(gDat$year)), x)
+  est <- c(coef(jFit),sd(jFit$residuals))
+  names(est) <- c("intercept", "slope","sd" )
+  return(est)
+}
+```
+Then use the function above get the intercept and slope within each country
+```{r results = 'asis'}
+ests<- ddply(gDat,~country,jFun)
+htmlPrint(ests)
+```
+
+Print it to file
+```{r}
+write.table(ests, "ests.tsv", quote = FALSE,
+            sep = "\t", row.names = FALSE)
+```
+
+Merge the estimated data with the original data
+```{r}
+jDat <- merge(gDat,ests)
+```
+
+Use function choose the best 3 countries as the maximum slope(The Most Improved Awards), the maximum intercept(Best country in the past), , and the minimum standard deviation(The Most Stable Improvement Awards)
+```{r}
+BestFun <- function(x){
+  max_slope <- which.max(x$slope)
+  max_intercept <- which.max(x$intercept)
+  min_sd <- which.min(x$sd)
+x[c(max_slope,max_intercept,min_sd),]
+}
+```
+
+Similariary,use function choose the worest 3 countries as the minimum slope, the minimum intercept, and the maximum standard deviation.
+```{r}
+WorestFun <- function(x){
+  min_slope <- which.min(x$slope)
+  min_intercept <- which.min(x$intercept)
+  max_sd <- which.max(x$sd)
+  x[c(min_slope,min_intercept,max_sd),]
+}
+```
+Get the best and worest countries in Afica and merge into one data frame
+```{r results = 'asis'}
+Best_Africa <- BestFun(subset(jDat,subset=continent=="Africa"))
+htmlPrint(Best_Africa)
+Worest_Africa <- WorestFun(subset(jDat,subset=continent=="Africa"))
+htmlPrint(Worest_Africa)
+merge_Africa<- merge(Best_Africa,Worest_Africa,all=TRUE)
+BestandWorest_Afria<-subset(gDat,subset=country %in% merge_Africa$country)
+```
+Get the best and worest countries in Asia and merge into one data frame
+```{r results='asis'}
+Best_Asia <- BestFun(subset(jDat,subset=continent=="Asia"))
+htmlPrint(Best_Asia)
+Worest_Asia <- WorestFun(subset(jDat,subset=continent=="Asia"))
+htmlPrint(Worest_Asia)
+ merge_Asia<- merge(Best_Asia,Worest_Asia,all=TRUE)
+BestandWorest_Asia<-subset(gDat,subset=country %in% merge_Asia$country)
+```
+Get the best and worest countries in Americas and merge into one data frame
+```{r results='asis'}
+Best_Americas <- BestFun(subset(jDat,subset=continent=="Americas"))
+htmlPrint(Best_Americas)
+Worest_Americas <- WorestFun(subset(jDat,subset=continent=="Americas"))
+htmlPrint(Worest_Americas)
+merge_Americas<- merge(Best_Americas,Worest_Americas,all=TRUE)
+BestandWorest_Americas<-subset(gDat,subset=country %in% merge_Americas$country)
+```
+Get the best and worest countries in Europe and merge into one data frame
+```{r results='asis'}
+Best_Europe <- BestFun(subset(jDat,subset=continent=="Europe"))
+htmlPrint(Best_Europe)
+Worest_Europe <- WorestFun(subset(jDat,subset=continent=="Europe"))
+htmlPrint(Best_Europe)
+merge_Europe<- merge(Best_Europe,Worest_Europe,all=TRUE)
+BestandWorest_Europe<-subset(gDat,subset=country %in% merge_Europe$country)
+```
+
+Put it all togather
+```{r}
+all_Best_Worest <- rbind(BestandWorest_Afria,BestandWorest_Asia,
+                         BestandWorest_Americas,BestandWorest_Europe)
+ests_Best_Worest<- ddply(all_Best_Worest,~country,jFun)
+```
+Print it to file
+```{r}
+write.table(ests_Best_Worest, "Best_Worest_countries_each_continents_estimation.tsv", 
+            quote = FALSE,sep = "\t", row.names = FALSE)
+```
+For Africa
+```{r}
+ggplot(BestandWorest_Afria,aes(x=year,y=lifeExp,colour=country))+
+  geom_point()+geom_line()+stat_smooth(method = "lm")+
+  facet_wrap(~country)+ggtitle("The Best And Worest countries in Africa ")
+dev.print(pdf,"Best_Worest_Countries_Africa.pdf")
+```
+For Asia
+```{r}
+ggplot(BestandWorest_Asia,aes(x=year,y=lifeExp,colour=country))+
+  geom_point()+geom_line()+stat_smooth(method = "lm")+
+  facet_wrap(~country)+ggtitle("The Best And Worest countries in Asia ")
+dev.print(pdf,"Best_Worest_Countries_Asia.pdf")
+```
+For Americas
+```{r}
+ggplot(BestandWorest_Americas,aes(x=year,y=lifeExp,colour=country))+
+  geom_point()+geom_line()+stat_smooth(method = "lm")+
+  facet_wrap(~country)+ggtitle("The Best And Worest countries in Americas ")
+dev.print(pdf,"Best_Worest_Countries_Americas.pdf")
+```
+For Europe
+```{r}
+ggplot(BestandWorest_Europe,aes(x=year,y=lifeExp,colour=country))+
+  geom_point()+geom_line()+stat_smooth(method = "lm")+
+  facet_wrap(~country)+ggtitle("The Best And Worest countries in Europe ")
+dev.print(pdf,"Best_Worest_Countries_Europe.pdf")
+```
