@@ -94,16 +94,14 @@ write.table(ests_Best_Worest, "Best_Worest_countries_each_continents_estimation.
 
 ##For Africa
 ggplot(BestandWorest_Afria,aes(x=year,y=lifeExp,colour=country))+geom_point()+geom_line()+stat_smooth(method = "lm")+facet_wrap(~country)+ggtitle("The Best And Worest countries in Africa ")
-dev.print(pdf,"Best_Worest_Countries_Africa")
-
+ggsave("Best_Worest_Countries_Africa.png")
 ##For Asia
 ggplot(BestandWorest_Asia,aes(x=year,y=lifeExp,colour=country))+geom_point()+geom_line()+stat_smooth(method = "lm")+facet_wrap(~country)+ggtitle("The Best And Worest countries in Asia ")
-dev.print(pdf,"Best_Worest_Countries_Asia")
-
+ggsave("Best_Worest_Countries_Asia.png")
 ##For Americas
 ggplot(BestandWorest_Americas,aes(x=year,y=lifeExp,colour=country))+geom_point()+geom_line()+stat_smooth(method = "lm")+facet_wrap(~country)+ggtitle("The Best And Worest countries in Americas ")
-dev.print(pdf,"Best_Worest_Countries_Americas")
+ggsave("Best_Worest_Countries_Americas.png")
 
 ##For Europe
 ggplot(BestandWorest_Europe,aes(x=year,y=lifeExp,colour=country))+geom_point()+geom_line()+stat_smooth(method = "lm")+facet_wrap(~country)+ggtitle("The Best And Worest countries in Europe ")
-dev.print(pdf,"Best_Worest_Countries_Europe")
+ggsave("Best_Worest_Countries_Europe.png")

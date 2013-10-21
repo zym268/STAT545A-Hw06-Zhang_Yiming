@@ -21,40 +21,27 @@ gDat <- droplevels(subset(gDat,continent !="Oceania"))
 stripplot(lifeExp ~ continent, gDat, jitter.data = TRUE, grid = "h", 
           type = c("p", "a"), fun = median) 
 
-## print the plot to file
-dev.print(pdf,"lifeExp_in_continent.pdf")   
-
-##plot and print life expectancy varing by time
-stripplot(lifeExp ~ factor(year) | reorder(continent, lifeExp), gDat,
-          jitter.data = TRUE,
-          type = c("p", "a"), fun = median, alpha = 0.4, grid = "h", 
-          ## use alpha to control the transparency 
-          main = paste("Life expectancy varies in time in four continents"),
-          scales = list(x = list(rot = c(45, 0))))
-dev.print(pdf,"lifeExp_in_continent_by_time_4plots.pdf")
-
-#plot and print the life expectancy varing trend for the four continents
+#plot the life expectancy varing trend for the four continents
 LifeExpchgebyCont_tall <- ddply(gDat, ~year + continent, summarize, MedianLifeExp = median(lifeExp))
-xyplot(MedianLifeExp ~ year, LifeExpchgebyCont_tall, groups = continent, 
-       main = paste("Life expectancy by median in four continents"),
-       auto.key = TRUE, type = c("p", "a")) 
-dev.print(pdf,"lifeExp_in_continent_by_time_1polts.pdf")
+ggplot(LifeExpchgebyCont_tall,aes(x=year,y=MedianLifeExp,colour=continent))+geom_point()+geom_line()+stat_smooth(method = "lm")+facet_wrap(~continent)+ggtitle("Life expectancy by median in four continents")
+ggsave("lifeExp_in_continent_by_time_4polts.png")
+ggplot(LifeExpchgebyCont_tall,aes(x=year,y=MedianLifeExp,colour=continent))+geom_point()+geom_line()+ggtitle("Life expectancy by median in four continents")
+ggsave("lifeExp_in_continent_by_time_1polts.png")
 
 ##plot and print the density plot on gdpPercap for four coninents in 2007
 select_year <- "2007" # avoid the magic number
 gDat_select_year <- subset(gDat,subset=year==select_year)
 ggplot(gDat_select_year,aes(x=gdpPercap,colour=continent))+geom_density()
-dev.print(pdf,"gdpPercap_in_continent_densitypolts.pdf")
+ggsave("gdpPercap_in_continent_densitypolts.png")
 
 ##plot the density plot on lifeExp for four coninents in 2007
 ggplot(gDat_select_year,aes(x=lifeExp,colour=continent))+geom_density()
-dev.print(pdf,"lifeExp_in_continent_densitypolts.pdf")
+ggsave("lifeExp_in_continent_densitypolts.png")
 
 ## plot with gdpPercap as x asis, lifeExp as y asis and square root of population as size of each plot
 ggplot(subset(gDat, year == select_year), aes(x = gdpPercap, y = lifeExp, colour = continent, 
                                               size = sqrt(pop))) + geom_point() + scale_x_log10()
-dev.print(pdf,"plot4country_gdpPercap_lifeExp_population_as_size.pdf")
-
+ggsave("plot4country_gdpPercap_lifeExp_population_as_size.png")
 
 ##reorder and arrange the gapminder data
 
