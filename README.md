@@ -22,5 +22,6 @@ How to replicate my analysis
     - [`Best_Worest_Countries_Europe.png`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/Best_Worest_Countries_Europe.png)
     - [`gdpPercap_in_continent_densitypolts.png`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/gdpPercap_in_continent_densitypolts.png)
     - [`lifeExp_in_continent_by_time_1polts.png`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/lifeExp_in_continent_by_time_1polts.png)
+    - [`lifeExp_in_continent_by_time_4polts.png`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/lifeExp_in_continent_by_time_4polts.png)
     - [`lifeExp_in_continent_densitypolts.png`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/lifeExp_in_continent_densitypolts.png)
   * To remove the output and get a clean slate, in a shell: `make clean`
