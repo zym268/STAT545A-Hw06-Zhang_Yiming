@@ -12,7 +12,10 @@ How to replicate my analysis
     - Scripts: [`Hw06 script01.R`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/Hw06%20script01.R)
     - [`Hw06 script02.R`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/Hw06%20script02.R)
     - [`source.R`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/source.R)
-  * Run [`source.R`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/source.R) in Rstudio. 
+    - R Markdown: [`HW06.Rmd`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/HW06.Rmd)
+    - Makefile: [`Makefile`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/Makefile)
+  * Run [`source.R`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/source.R) in Rstudio.
+  * Or in a shell: `make all`. Or just: `make`.
   * New files you should see after running the pipeline:
     - [`gDat_cl.tsv`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/gDat_cl.tsv)
     - [`ests.tsv`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/ests.tsv)
@@ -25,4 +28,5 @@ How to replicate my analysis
     - [`lifeExp_in_continent_by_time_1polts.png`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/lifeExp_in_continent_by_time_1polts.png)
     - [`lifeExp_in_continent_by_time_4polts.png`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/lifeExp_in_continent_by_time_4polts.png)
     - [`lifeExp_in_continent_densitypolts.png`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/lifeExp_in_continent_densitypolts.png)
+    - [`HW06.html`](https://github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/blob/master/HW06.html)
  
