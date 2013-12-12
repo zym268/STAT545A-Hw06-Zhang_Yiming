@@ -28,5 +28,5 @@ How to replicate my analysis
     - [`lifeExp_in_continent_by_time_1polts.png`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/lifeExp_in_continent_by_time_1polts.png)
     - [`lifeExp_in_continent_by_time_4polts.png`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/lifeExp_in_continent_by_time_4polts.png)
     - [`lifeExp_in_continent_densitypolts.png`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/lifeExp_in_continent_densitypolts.png)
-    - [`HW06.html`](https://github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/blob/master/HW06.html)
+    - `HW06.html`: [raw](https://github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/blob/master/HW06.html) or [rendered](http://htmlpreview.github.com/?https://github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/blob/master/HW06.html)
  
