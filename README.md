@@ -17,9 +17,9 @@ How to replicate my analysis
   * Run [`source.R`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/source.R) in Rstudio.
   * Or in a shell: `make all`. Or just: `make`.
   * New files you should see after running the pipeline:
-    - [`gDat_cl.tsv`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/gDat_cl.tsv)
-    - [`ests.tsv`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/ests.tsv)
-    - [`Best_Worest_countries_each_continents_estimation.tsv`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/Best_Worest_countries_each_continents_estimation.tsv)
+    - [`gDat_cl.tsv`](https://github.com/jennybc/STAT545a-2013-hw06_Zhang-yiming/blob/master/gDat_cl.tsv)
+    - [`ests.tsv`](https://github.com/jennybc/STAT545a-2013-hw06_Zhang-yiming/blob/master/ests.tsv)
+    - [`Best_Worest_countries_each_continents_estimation.tsv`](https://github.com/jennybc/STAT545a-2013-hw06_Zhang-yiming/blob/master/Best_Worest_countries_each_continents_estimation.tsv)
     - [`Best_Worest_Countries_Africa.png`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/Best_Worest_Countries_Africa.png)
     - [`Best_Worest_Countries_Americas.png`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/Best_Worest_Countries_Americas.png)
     - [`Best_Worest_Countries_Asia.png`](https://raw.github.com/zym268/STAT545a-2013-hw06_Zhang-yiming/master/Best_Worest_Countries_Asia.png)
